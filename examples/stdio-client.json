@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "zzp-mcp": {
+      "command": "dotnet",
+      "args": ["E:/source/zzp-mcp/src/ZzpMcp/bin/Debug/net10.0/ZzpMcp.dll"]
+    }
+  }
+}
