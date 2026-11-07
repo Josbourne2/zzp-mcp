@@ -45,6 +45,8 @@ public sealed class SourceTests
 
     [Theory]
     [InlineData("ZZP mogelijk: Nee", Permission.NotAllowed, false)]
+    [InlineData("Geen ZZP toegestaan", Permission.NotAllowed, false)]
+    [InlineData("Geen ZZP toegestaan; elders staat ZZP toegestaan", Permission.Unknown, true)]
     [InlineData("GEEN ZZP mogelijk, enkel detachering", Permission.NotAllowed, false)]
     [InlineData("Employment type: Interim", Permission.Unknown, false)]
     [InlineData("Algemene Inhuurvoorwaarden Zelfstandige Professionals", Permission.Unknown, false)]

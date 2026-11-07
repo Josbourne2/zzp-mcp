@@ -76,7 +76,8 @@ public static class JobMapper
         {
             // Only explicit vacancy statements, never infer from 'interim', 'detachering' or boilerplate terms.
             var negative = Regex.IsMatch(line, $@"\b(?:geen|zonder)\s+{term}\b|\b{term}\s*(?:mogelijk\s*[:?]?\s*(?:nee|niet)|(?:is\s+)?niet\s+(?:mogelijk|toegestaan))", RegexOptions.IgnoreCase);
-            var positive = Regex.IsMatch(line, $@"\b{term}\s*(?:mogelijk\s*[:?]?\s*ja|[:]?\s+(?:is\s+)?toegestaan)\b", RegexOptions.IgnoreCase);
+            var positive = Regex.Matches(line, $@"\b{term}\s*(?:mogelijk\s*[:?]?\s*ja|[:]?\s+(?:is\s+)?toegestaan)\b", RegexOptions.IgnoreCase)
+                .Any(match => !Regex.IsMatch(line[..match.Index], @"\b(?:geen|zonder)\s*$", RegexOptions.IgnoreCase));
             if (negative) evidence.Add((Permission.NotAllowed, new("description", line.Trim())));
             if (positive) evidence.Add((Permission.Allowed, new("description", line.Trim())));
         }

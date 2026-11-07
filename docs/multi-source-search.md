@@ -2,7 +2,7 @@
 
 ## Gedrag
 
-`search_jobs` gebruikt standaard `source=all`. Elke geregistreerde `IJobSource` krijgt dezelfde generieke zoekvraag. Beschikbare adapters: Harvey Nash en Striive/Vertage. De toepassing zoekt op de bronnen onafhankelijk en geeft per bron een status terug.
+`search_jobs` gebruikt standaard `source=all`. Elke geregistreerde `IJobSource` krijgt dezelfde generieke zoekvraag. Beschikbare adapters: Harvey Nash, Striive/Vertage, Flextender, Freep, MiPublic, Magnit, LibLab, Werken in Gelderland en StarApple. De toepassing zoekt op de bronnen onafhankelijk en geeft per bron een status terug.
 
 - `completed`: deze bronpagina is beschikbaar, eventueel met vervolgcurs or en waarschuwingen.
 - `connecting`: de browserpagina wordt nog geladen; de host hervat na kort wachten.
@@ -17,13 +17,13 @@ De response bevat `searchId`, samengevoegde `jobs`, afzonderlijke `sources` met 
 
 ## Vertage-adapter
 
-Lijst: de door de gebruiker aangeleverde GET-route `https://freelancer.vertage.com/api/v2/job-requests`. De adapter gebruikt `searchText`, `locations`, `maxRadius`, `page`, `size`, `sortOrder=DESCENDING` en `useMatchingScore=false`. Pagina's worden uit de bron-offset afgeleid. De response is een array zonder vastgesteld brontotaal; `sourceTotal` blijft `null`. Een volle pagina krijgt een vervolg, een korte/lege pagina beëindigt de reeks. Deze aanpak is begrensd op 1000 geconsumeerde records en meldt herhaalde pagina's/onvolledigheid.
+Lijst: de door de gebruiker aangeleverde GET-route `https://freelancer.vertage.com/api/v2/job-requests`. `search_jobs` gebruikt de generieke paginagrootte en zoekparameters, aangevuld met `maxHoursPerWeek=40` en `useMatchingScore=true`. `collect_jobs` gebruikt de volledige opgegeven query met size=1000, maxRadius=100, lege overige bronfilters en DESCENDING-sortering. Een volle bronpagina krijgt een vervolg, een korte/lege pagina beëindigt de reeks. Het brontotaal blijft onbekend. De collector bewaart voortgang per collectionId en doorloopt ook meer dan 1000 records; de scanlimiet van de generieke search_jobs geldt daar niet. Compleet geldt alleen binnen deze account-/filtergebonden scope. Scans verwijderen nooit gedeelde vacatures, details of eerdere sessieverwijzingen; afwezigheid bewijst geen sluiting.
 
 Live onderzocht: `.net` gaf twee resultaten waar `C#` nul gaf; `locations=Utrecht` gaf vacatures in Utrecht en Huis ter Heide/Utrecht. De native locatie- en radiusparameters worden doorgegeven, maar exacte afstandssemantiek is niet vastgesteld. Zoekmachines behandelen termen verschillend: de AI-host moet zo nodig synoniemen gebruiken. Harvey Nash-categorie-ID's zijn niet geldig bij Vertage; zulke filters worden expliciet afgewezen. Een gezamenlijke zoekactie accepteert geen bronspecifieke categorie-ID's.
 
-Volledige details: de browser opent de waargenomen bronlink `/inbox/all/{id}` en wacht op de werkelijk door de site uitgevoerde detailrequest. Er wordt geen detail-API-endpoint verzonnen. `description`, voorwaarden en gestructureerde eisen worden naar leesbare tekst vertaald. Skills worden alleen uit expliciete `COMPETENCE`-velden gehaald. Uren, begin/einddatum, opdrachtgever, locatie en positieve uurtariefvelden blijven herleidbaar. Valuta/btw worden niet geraden. `typeOfProfessional` blijft een broncode; payroll- of ZZP-toestemming wordt niet uit een ongedocumenteerde code afgeleid.
+Volledige details: bestaande teksten komen uit SQLite. Ontbrekende teksten komen rechtstreeks uit de door de gebruiker opgegeven GET-route `https://freelancer.vertage.com/api/job-requests/{id}`, met de beschermde lokale browsersessie. Browsernavigatie naar een detailpagina is niet nodig. `description`, voorwaarden en gestructureerde eisen worden naar leesbare tekst vertaald. Skills komen uit expliciete `COMPETENCE`-velden; contractcodes bewijzen geen ZZP/payroll-toestemming. Een cachetreffer bewaart de oorspronkelijke ophaaltijd en wordt niet als actuele broncontrole gepresenteerd. Er is geen TTL of automatische verversing.
 
-Lijsttreffers bevatten niet alle tekst. Daardoor kan contractstatus in een lijst nog `unknown` zijn. Lees `get_job` vóór matching en gebruik een conservatieve harde ZZP-filter bewust: onbekenden worden uitgesloten, ook als later detailonderzoek meer bewijs zou kunnen opleveren.
+De native lijst bevat niet alle tekst. Daarom verrijkt Vertage `search_jobs` de treffers met volledige details en levert die ook in `details` naast de generieke samenvattingen. `collect_jobs` bewaart de volledige teksten batchgewijs; lees ze daarna met `get_job`. Detailfouten zijn geen succesvolle lijstresultaten of bewijs van ongeschiktheid. Ophalen/verzamelen betekent niet automatisch inhoudelijk beoordelen.
 
 De bron levert ondertekende afbeeldingslinks en persoonlijke matching-/favorietvelden mee. Die zijn niet nodig voor vacaturematching en worden uit genormaliseerde details/fixtures verwijderd. Ook querytokens in bron-HTML/links worden verwijderd. Sessiecookies en authheaders blijven uitsluitend lokaal in de sessielaag. De fixture `vertage.sanitized.json` bevat alleen benodigde vacaturevelden; geen sessie- of accountgegevens.
 
@@ -45,3 +45,11 @@ dotnet run --project tools/ZzpMcp.Smoke -c Release --no-build -- --all-live E:/s
 ```
 
 Interactieve commando's: `new` start opnieuw over alle bronnen, `resume` hervat de bewaarde actie, `detail vertage <id>` leest volledige tekst, `exit` sluit af. De tool meldt onvolledige verificatie als bij afsluiten nog bronnen ontbreken.
+
+## Flextender
+
+De publieke website levert alle client-side lijstpagina's via één Ajax-response. Volledige teksten en provincie worden opgehaald; bestaande details komen uit SQLite. Gebruik `collect_jobs(source="flextender", sessionId=...)` voor brede verzameling. Een locatievraag geeft voor deze bron `unsupported_filter`; plaats-/kilometersemantiek is niet geverifieerd. De ingelogde leveranciersomgeving wordt niet gebruikt. Zie [broncontract en verificatie](flextender.md).
+
+## Vijf aanvullende openbare bronnen
+
+Freep, MiPublic, Magnit, LibLab, Werken in Gelderland en StarApple ondersteunen brede verzameling via `collect_jobs`. Ze gebruiken anonieme HTTP, volledige details en de gedeelde detailcache. Bij `search_jobs` wordt een ingevulde `query` lokaal en letterlijk toegepast op titel, opdrachtgever en volledige tekst van de huidige bronpagina. `localMatchTotal=null` is geen nulresultaat; blijf vervolgpagina's doorlopen. `appliedLocalFilters` beschrijft de scope en `appliedSourceFilters` claimt geen native zoekterm. `location` en categorie-ID's worden expliciet afgewezen. Zie [broncontracten, limieten en verificatie](public-source-adapters.md).

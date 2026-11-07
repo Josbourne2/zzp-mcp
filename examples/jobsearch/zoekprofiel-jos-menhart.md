@@ -1,6 +1,6 @@
 # Zoekprofiel Jos Menhart
 
-Bijgewerkt op 5 november 2026 op basis van de expliciete zoekwensen van Jos en zijn aangeleverde cv.
+Bijgewerkt op 7 november 2026 op basis van de expliciete zoekwensen van Jos en zijn aangeleverde cv.
 
 ## Referentie en doel
 
@@ -50,7 +50,7 @@ Bewijs uit het cv:
 - Certificeringen zoals MCSE Data Management and Analytics, MCSA SQL Server en MCTS SQL Server staan in het cv; geldigheid of actuele certificeringsstatus is niet afzonderlijk geverifieerd.
 - De meest recente expliciete dedicated DBA-functie in het cv eindigt in 2017. Dat is geen bewijs dat latere beheerervaring ontbreekt; toets actuele versiekennis, backup/recovery, HA/DR en eventuele consignatie-eisen per vacature.
 
-## Harde grens voor leadfuncties: geen opeenstapeling van functies
+## Leadfuncties: gecombineerde rollen zichtbaar maken
 
 Jos zoekt een **echte inhoudelijke technische leadfunctie**. Een leadtitel maakt een vacature niet vanzelf passend.
 
@@ -60,13 +60,13 @@ Positieve signalen:
 - Duidelijke verantwoordelijkheid en afbakening tegenover product owner, scrum master, engineering manager en project-/deliverymanagement.
 - Een beschreven taakverdeling waaruit blijkt dat de leadrol daadwerkelijk uitvoerbaar is.
 
-Afwijzen of expliciet als ongeschikt markeren wanneer dezelfde persoon structureel meerdere volledige functies moet vervullen, bijvoorbeeld:
+Laat relevante leadrollen ook zien wanneer dezelfde persoon meerdere functies moet vervullen. Zet in de resultatentabel **Waarschijnlijk een gecombineerde functie** en benoem de combinatie, bijvoorbeeld:
 
 - Productief ontwikkelen én teamcoaching én werkvoorbereiding/werkverdeling én delivery- of projectcoördinatie.
 - Developer, people manager, scrum master, planner en centraal aanspreekpunt tegelijk zijn.
 - Een onbegrensde rol als ‘spin in het web’, met overal verantwoordelijkheid zonder afgebakend mandaat.
 
-Beoordeel de concrete werkzaamheden en verantwoordelijkheden, niet alleen losse trefwoorden. Gewone samenwerking, technische afstemming of het testen van eigen code bewijst op zichzelf geen opeenstapeling van functies. Als de verdeling onduidelijk is, label dit **voorwaardelijk** en stel concrete vragen over taken, tijdsverdeling, mandaat en wie coaching/planning/people management uitvoert.
+Beoordeel de concrete werkzaamheden en verantwoordelijkheden, niet alleen losse trefwoorden. Gewone samenwerking, technische afstemming of het testen van eigen code bewijst op zichzelf geen opeenstapeling van functies. Een gecombineerde functie is geen zelfstandige uitsluitingsgrond. Als de verdeling onduidelijk is, benoem die onzekerheid en stel concrete vragen over taken, tijdsverdeling, mandaat en wie coaching/planning/people management uitvoert.
 
 Een softwarearchitectrol mag meer afstand tot dagelijkse implementatie hebben, mits het om technische architectuur gaat en het profiel aansluit. Een voornamelijk bestuurlijke, procesmatige of enterprise-regierol is geen automatische match met softwarearchitectuurervaring.
 

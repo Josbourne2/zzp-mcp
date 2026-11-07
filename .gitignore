@@ -429,3 +429,12 @@ FodyWeavers.xsd
 
 # Lokale agentconfiguratie
 .serena/
+
+# Lokale vacatureopslag en SQLite-journals
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm

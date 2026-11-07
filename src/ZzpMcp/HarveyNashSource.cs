@@ -7,6 +7,7 @@ namespace ZzpMcp;
 public sealed class HarveyNashSource(HttpClient http) : IJobSource, IDisposable
 {
     public string Id => "harvey-nash";
+    public bool SearchIncludesDetails => true;
     public object Capabilities => new
     {
         name = "Harvey Nash", connection = "anonymous", status = "configured_not_health_checked",

@@ -166,17 +166,15 @@ public sealed class StriiveBrowserSession : IStriiveSession
         await _gate.WaitAsync(ct);
         try
         {
-            if (_context is null || !_wasConnected) throw new SourceException("login_required", "Vertage vereist login; verbind de bron en herhaal details ophalen.");
-            var page = _context.Pages.FirstOrDefault() ?? await _context.NewPageAsync();
-            // Observe the actual site's request; do not invent a detail API endpoint.
-            var response = await page.RunAndWaitForResponseAsync(async () => {
-                await page.GotoAsync($"https://freelancer.vertage.com/inbox/all/{number}", new() { Timeout = 12000, WaitUntil = WaitUntilState.DOMContentLoaded });
-            }, r => r.Request.Method == "GET" && Uri.TryCreate(r.Url, UriKind.Absolute, out var uri) && uri.Host == "freelancer.vertage.com" &&
-                uri.AbsolutePath.StartsWith("/api/", StringComparison.Ordinal) && uri.AbsolutePath.Contains("job-request", StringComparison.Ordinal) &&
-                uri.AbsolutePath.EndsWith('/' + number.ToString(), StringComparison.Ordinal), new() { Timeout = 15000 });
-            if (response.Status is 401 or 403) { _candidate = null; _verified = null; throw new SourceException("login_required", "Vertage-sessie verlopen; log opnieuw in."); }
+            var target = _candidate ?? _verified;
+            if (_context is null || target is null || !_wasConnected) throw new SourceException("login_required", "Vertage vereist login; verbind de bron en herhaal details ophalen.");
+            // Exact detail route supplied by the user; reuse only the protected local session.
+            await using var response = await _context.APIRequest.GetAsync(DetailUrl(number),
+                new() { Headers = target.Value.Headers, Timeout = 15000, MaxRedirects = 0 });
+            var type = response.Headers.GetValueOrDefault("content-type", "");
+            if (SessionProof.RequiresLogin(response.Status, type)) { _candidate = null; _verified = null; _wasConnected = false; throw new SourceException("login_required", "Vertage-sessie verlopen; log opnieuw in."); }
             if (response.Status == 404) throw new SourceException("not_found", "Vertage-opdracht niet meer gevonden.");
-            if (response.Status != 200) throw new SourceException("source_http", $"Vertage-detail gaf HTTP {response.Status}.");
+            if (response.Status != 200 || !type.Contains("json", StringComparison.OrdinalIgnoreCase)) throw new SourceException("source_http", $"Vertage-detail gaf geen JSON (HTTP {response.Status}).");
             var body = await response.BodyAsync();
             if (body.Length > 10 * 1024 * 1024) throw new SourceException("response_too_large", "Vertage-detail groter dan 10 MiB.");
             using var doc = JsonDocument.Parse(body);
@@ -185,6 +183,11 @@ public sealed class StriiveBrowserSession : IStriiveSession
         catch (PlaywrightException) { throw new SourceException("source_network", "Vertage-detail niet opgehaald; controleer login, beschikbaarheid of gewijzigde bronroute."); }
         catch (JsonException) { throw new SourceException("source_schema", "Vertage-detail gaf ongeldige JSON."); }
         finally { _gate.Release(); }
+    }
+    public static string DetailUrl(long id)
+    {
+        if (id <= 0) throw new SourceException("invalid_argument", "Vertage-ID moet een positief nummer zijn.");
+        return "https://freelancer.vertage.com/api/job-requests/" + id.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
     public async ValueTask DisposeAsync() {
         if (Interlocked.Exchange(ref _disposed, 1) != 0) return;

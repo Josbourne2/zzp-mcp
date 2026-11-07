@@ -1,0 +1,235 @@
+{
+  "date": "2026-11-06",
+  "timezone": "Europe/Amsterdam",
+  "scope": "Accountvrij lezen van volledige opdrachten en aanvullende vacatures; historische inventarisatie met latere implementatiestatus per bron",
+  "lastUpdated": "2026-11-07",
+  "computerControlUsed": false,
+  "headlessOnlyWhenNeeded": true,
+  "sources": [
+    {
+      "id": "harvey-nash",
+      "name": "Harvey Nash",
+      "assessment": "existing",
+      "route": "http_json",
+      "fullTextWithoutAccount": true,
+      "evidence": "Bestaande adapter; niet opnieuw live gelezen",
+      "errors": []
+    },
+    {
+      "id": "flextender",
+      "name": "Flextender",
+      "assessment": "implemented",
+      "route": "http_form_html",
+      "fullTextWithoutAccount": true,
+      "evidence": "Live MCP-proef eerder op dezelfde datum; 217 lijstidentiteiten",
+      "errors": []
+    },
+    {
+      "id": "freep",
+      "name": "Freep",
+      "assessment": "priority_1",
+      "route": "http_embedded_json_and_html",
+      "fullTextWithoutAccount": true,
+      "evidence": "470 identiteiten in Nuxt-payload; volledige detailproef",
+      "errors": []
+    },
+    {
+      "id": "mipublic",
+      "name": "MiPublic",
+      "assessment": "priority_2",
+      "route": "http_html_jsonld",
+      "fullTextWithoutAccount": true,
+      "evidence": "154/154 ICT-detail-URLs in ItemList; tekst en plaats in detail",
+      "errors": []
+    },
+    {
+      "id": "magnit",
+      "name": "Magnit Source",
+      "assessment": "priority_3",
+      "route": "http_json",
+      "fullTextWithoutAccount": true,
+      "evidence": "115 wereldwijd; twee cursorpagina's 10+10 zonder overlap; Nederlandse details",
+      "errors": []
+    },
+    {
+      "id": "liblab",
+      "name": "LibLab",
+      "assessment": "priority_4",
+      "route": "http_html_jsonld",
+      "fullTextWithoutAccount": true,
+      "evidence": "12+12 verschillende opdrachten via _paged=2; volledige detailproef",
+      "errors": []
+    },
+    {
+      "id": "werkeningelderland",
+      "name": "Werken in Gelderland",
+      "assessment": "priority_5",
+      "route": "http_html",
+      "fullTextWithoutAccount": true,
+      "evidence": "78 opdrachten; normale pagina 2 en volledige detailproef; Flextender-overlap",
+      "errors": []
+    },
+    {
+      "id": "freelancer",
+      "name": "Freelancer.nl",
+      "assessment": "conditional",
+      "route": "http_html",
+      "fullTextWithoutAccount": true,
+      "evidence": "Cumulatieve pagina's 24/48; opdrachtgeversinformatie beperkt",
+      "errors": []
+    },
+    {
+      "id": "freelapp",
+      "name": "Freelapp",
+      "assessment": "conditional",
+      "route": "http_html_jsonld",
+      "fullTextWithoutAccount": null,
+      "evidence": "Uitgebreide beschrijving en bronlink; gelijkheid originele tekst onbekend",
+      "errors": []
+    },
+    {
+      "id": "xfreelance",
+      "name": "xFreelance",
+      "assessment": "conditional",
+      "route": "http_html_jsonld",
+      "fullTextWithoutAccount": true,
+      "evidence": "20 per pagina; tekst geredigeerd, bronlink achter account",
+      "errors": []
+    },
+    {
+      "id": "opdrachtoverheid",
+      "name": "Opdracht Overheid",
+      "assessment": "needs_contract_research",
+      "route": "headless_list_http_detail",
+      "fullTextWithoutAccount": true,
+      "evidence": "Meer Weergeven toont 50 opdrachtlinks; publieke detail-HTML",
+      "errors": []
+    },
+    {
+      "id": "freelance",
+      "name": "Freelance.nl",
+      "assessment": "account_boundary",
+      "route": "headless",
+      "fullTextWithoutAccount": false,
+      "evidence": "Korte omschrijving; gestopt",
+      "errors": [
+        "Volledige opdracht bekijken? Log hier in / Registreer gratis"
+      ]
+    },
+    {
+      "id": "itaq",
+      "name": "ItaQ",
+      "assessment": "account_boundary",
+      "route": "http_html",
+      "fullTextWithoutAccount": false,
+      "evidence": "Eigen toelichting vraagt login voor volledige tekst en opdrachtgever",
+      "errors": [
+        "Log in met een bestaand account voor alle details"
+      ]
+    },
+    {
+      "id": "computerfutures",
+      "name": "Computer Futures",
+      "assessment": "blocked",
+      "route": "http_then_headless",
+      "fullTextWithoutAccount": null,
+      "evidence": "Na eerste duidelijke blokkade gestopt",
+      "errors": [
+        "HTTP 403",
+        "Attention Required! | Cloudflare",
+        "Sorry, you have been blocked"
+      ]
+    },
+    {
+      "id": "circle8",
+      "name": "Circle8",
+      "assessment": "previously_blocked",
+      "route": "no_new_requests",
+      "fullTextWithoutAccount": null,
+      "evidence": "Twee eerdere achtergrondproeven geweigerd; niet herhaald",
+      "errors": [
+        "HTTP 403",
+        "403: Forbidden",
+        "This request was blocked"
+      ]
+    },
+    {
+      "id": "vertage",
+      "name": "Vertage / Striive",
+      "assessment": "requires_login",
+      "route": "no_new_requests",
+      "fullTextWithoutAccount": false,
+      "evidence": "Bestaande beschermde adapter; geen publieke vervanging onderzocht",
+      "errors": []
+    },
+    {
+      "id": "jellow",
+      "name": "Jellow",
+      "assessment": "invitation_flow",
+      "route": "official_faq",
+      "fullTextWithoutAccount": false,
+      "evidence": "FAQ beschrijft profiel en selectie/uitnodiging; geen openbare opdrachtlijst bewezen",
+      "errors": []
+    },
+    {
+      "id": "starapple",
+      "name": "StarApple",
+      "observedOn": "2026-11-07",
+      "assessment": "supplementary_vacancies_contract_mix_unverified",
+      "route": "http_html_native_pagination",
+      "fullTextWithoutAccount": true,
+      "implemented": true,
+      "evidence": "Twee anonieme HTTP-meetronden: lijstpagina 1, 2 en 18 plus Senior .NET Developer-detail HTTP 200; 20+20+4 links, 44 uniek; volledige secties zichtbaar; geen JobPosting JSON-LD",
+      "listUrl": "https://www.starapple.nl/vacatures/",
+      "detailProbeUrl": "https://www.starapple.nl/vacatures/senior-net-developer-18/",
+      "samplePages": [
+        1,
+        2,
+        18
+      ],
+      "sampleLinkCounts": [
+        20,
+        20,
+        4
+      ],
+      "uniqueSampleLinks": 44,
+      "estimatedListings": 344,
+      "estimateIsFullCount": false,
+      "contractEvidence": "Geteste /vacatures/-detail wijst op loondienst; verdeling contractvormen op die lijst niet vastgesteld. StarApple biedt ook interim/freelance/detachering. Andere openbare publicatieroutes bevatten expliciet ZZP-toestemming en payroll via StarApple Interim; niet automatisch toepassen op iedere opdracht.",
+      "additionalContractSources": [
+        {
+          "url": "https://www.starapple.nl/voor-opdrachtgevers/",
+          "evidence": "Eigen dienstenpagina noemt Interim, Detachering, Perm en ondersteuning bij freelancen"
+        },
+        {
+          "url": "https://select.hr/opdrachten/starapple-intern/payroll-manager/1d8eca8c-9fe7-43c9-bff0-48e3e91fbe9c",
+          "evidence": "Opdracht 316335: ZZP en detachering beide mogelijk; geen doorleen; reageren via Striive; sluitingsdatum 2026-05-06, geen actuele sollicitatiemogelijkheid"
+        },
+        {
+          "url": "https://www.freep.nl/opdracht/executive-assistant-2",
+          "evidence": "Leveranciers/detacheerders of zelfstandigen die op payroll bij StarApple Interim komen; andere publicatieroute dan /vacatures/"
+        }
+      ],
+      "matchingImplication": "ZZP en payroll onafhankelijk beoordelen. ZZP niet toegestaan sluit een expliciet toegestane payrollroute niet uit. StarApple als payrollpartij is geen algemene toestemming van de opdrachtgever.",
+      "limitations": [
+        "Pagina's 3-17 en andere details niet gelezen; geen volledige import",
+        "Vermeldingen omvatten ook een open sollicitatie",
+        "Zoekmachinecache wijkt af van rechtstreekse HTTP-inhoud",
+        "Dienstverband-filter bevat ervaringsniveaus, geen contractvormen",
+        "Filterwerking en kilometerfiltering niet vastgesteld",
+        "Uiteindelijke werkgever niet bij naam genoemd in detailproef",
+        "Powered by Vertage bewijst geen overlap met freelancerlijst"
+      ],
+      "errors": [],
+      "implementedOn": "2026-11-07",
+      "implementationDocumentation": "public-source-adapters.md",
+      "implementationVerification": {
+        "offlineTestsPassed": 142,
+        "liveObservedListings": 343,
+        "liveNativePages": 18,
+        "fullDetailImport": false,
+        "database": "temporary"
+      }
+    }
+  ]
+}

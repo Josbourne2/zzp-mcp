@@ -10,11 +10,12 @@ public sealed class VertageTests
     {
         public BrowserStatus Status { get; set; } = new("connected", true, "Connected");
         public string? Query { get; private set; }
+        public int DetailCalls { get; private set; }
         public Task<BrowserStatus> StartAsync(CancellationToken ct) => Task.FromResult(new BrowserStatus("awaiting_login", false, "Login"));
         public Task<BrowserStatus> CheckAsync(CancellationToken ct) => Task.FromResult(Status);
         public Task<BrowserStatus> CloseAsync(CancellationToken ct) => Task.FromResult(new BrowserStatus("disconnected", false, "Closed"));
         public Task<JsonElement> ReadJobsAsync(string queryString, CancellationToken ct) { Query = queryString; return Task.FromResult(JsonSerializer.SerializeToElement(new[] { Fixture })); }
-        public Task<JsonElement> ReadJobAsync(string id, CancellationToken ct) => Task.FromResult(Fixture);
+        public Task<JsonElement> ReadJobAsync(string id, CancellationToken ct) { DetailCalls++; return Task.FromResult(Fixture); }
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 
@@ -37,10 +38,24 @@ public sealed class VertageTests
         var session = new Session(); var source = new VertageSource(session);
         var result = await source.SearchAsync(new(Query: "C#", Location: "Utrecht", PageSize: 1), 2, default);
         Assert.Contains("page=2", session.Query); Assert.Contains("searchText=C%23", session.Query);
-        Assert.Contains("locations=Utrecht", session.Query); Assert.Contains("useMatchingScore=false", session.Query);
+        Assert.Contains("locations=Utrecht", session.Query); Assert.Contains("useMatchingScore=true", session.Query);
+        Assert.Equal(1, session.DetailCalls); Assert.True(result.IncludeDetails);
+        Assert.Contains("C#", Assert.Single(result.Jobs).Text);
         Assert.Null(result.Total); Assert.True(result.HasMore);
         var page = await new JobService([source]).SearchAsync("vertage", new(PageSize: 1), default);
         Assert.Null(page.SourceTotal); Assert.NotNull(page.NextCursor);
+        Assert.NotNull(page.Details);
+    }
+
+    [Fact]
+    public async Task Collection_uses_the_exact_supplied_query_and_direct_detail_route()
+    {
+        var session = new Session();
+        var page = await new VertageSource(session).ReadCollectionPageAsync(0, default);
+        Assert.Equal("?page=0&size=1000&maxRadius=100&sortBy=&sortOrder=DESCENDING&clientNames=&professionalTypes=&remoteAllowed=&locations=&skills=&maxHoursPerWeek=40&useMatchingScore=true", session.Query);
+        Assert.False(page.HasMore); Assert.Equal(0, session.DetailCalls);
+        Assert.Equal("https://freelancer.vertage.com/api/job-requests/395387", StriiveBrowserSession.DetailUrl(395387));
+        Assert.Throws<SourceException>(() => StriiveBrowserSession.DetailUrl(-1));
     }
 
     [Fact]
